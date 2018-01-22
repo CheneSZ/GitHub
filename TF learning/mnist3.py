@@ -8,8 +8,10 @@ network use CNN
 loss use 交叉熵
 
 """
+
 from __future__ import print_function
 import tensorflow as tf
+import time
 from tensorflow.examples.tutorials.mnist import input_data
 # number 1 to 10 data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
@@ -77,14 +79,19 @@ cross_entropy = tf.reduce_mean(-tf.reduce_sum(ys * tf.log(prediction),
                                               reduction_indices=[1]))       # loss
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 
+start_time = time.time()
+
 sess = tf.Session()
 init = tf.global_variables_initializer()
 sess.run(init)
 
-for i in range(1000):
-    batch_xs, batch_ys = mnist.train.next_batch(100)
+step = 500
+for i in range(step):
+    batch_xs, batch_ys = mnist.train.next_batch(50)
     sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})
-    if i % 50 == 0:
+    if i % 100 == 0:
         print(compute_accuracy(
             mnist.test.images[:1000], mnist.test.labels[:1000]))
          
+duration = float(time.time() - start_time)
+print("%d step total cost %.3f sec" % (step, duration))
