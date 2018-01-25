@@ -89,7 +89,7 @@ step = 500
 for i in range(step):
     batch_xs, batch_ys = mnist.train.next_batch(50)
     sess.run(train_step, feed_dict={xs: batch_xs, ys: batch_ys, keep_prob: 0.5})
-    if i % 100 == 0:
+    if (i+1) % 100 == 0:
         print(compute_accuracy(
             mnist.test.images[:1000], mnist.test.labels[:1000]))
          

@@ -3,6 +3,10 @@
 Created on Mon Jan 22 19:56:41 2018
 
 @author: vivo
+
+network use CNN
+loss use 交叉熵
+
 """
 
 import time
@@ -61,15 +65,15 @@ start_time = time.time()
 correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 tf.global_variables_initializer().run()
-for i in range(1000):
+
+step = 500
+for i in range(step):
   batch = mnist.train.next_batch(50)
-  if i%100 == 0:
+  if (i+1)%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={
         x:batch[0], y_: batch[1], keep_prob: 1.0})
-    print("step %d, training accuracy %g"%(i, train_accuracy))
+    print("step %d, training accuracy %g"%(i+1, train_accuracy))
   train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
 duration = float(time.time() - start_time)
-
-print("test accuracy %g cost %.3f sec"%(accuracy.eval(feed_dict={
-    x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}), duration))
+print("%d step total cost %.3f sec" % (step, duration))
